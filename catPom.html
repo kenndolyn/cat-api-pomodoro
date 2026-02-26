@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Pomodoro</title>
+    <link rel="stylesheet" href="catStyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/x-icon" href="/img/OIP (1).webp">
+</head>
+
+<body>
+    <h1>25 minute Pomodoro-Timer 🐾</h1>
+    <h2>With cute, random cat pictures to keep u motivated!</h2>
+
+    <div id="mode">Work</div>
+    <div id="timer">25:00</div>
+
+    <button id="startBtn">Start!</button>
+
+    <div id="images-container">
+        <img id="left-gif" src="img/R2.gif" />
+        <img id="cat-img" src="" />
+        <img id="right-gif" src="img/R3.gif" />
+    </div>
+
+    <div id="stats">
+        Work sessions: <span id="work-count">0</span> |
+        Break sessions: <span id="break-count">0</span>
+    </div>
+
+    <div id="quote"></div>
+
+    <footer class="text-center py-3 fixed-bottom">
+        Evy Branchizio 2026
+    </footer>
+    <script src="api.js"></script>
+</body>
+
+</html>

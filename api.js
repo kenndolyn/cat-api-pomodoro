@@ -15,18 +15,26 @@ doneSound.volume = 0.6;
 let mode = "work";
 let timeLeft = 25 * 60;
 let timerInterval = null;
+let isPaused = false;
 
 let workCount = 0;
 let breakCount = 0;
 
-startBtn.addEventListener("click", startTimer);
+startBtn.addEventListener("click", toggleTimer);
+
+function toggleTimer() {
+    timerInterval ? pauseTimer() : startTimer();
+}
 
 function startTimer() {
-    if (timerInterval) return;
-
     catImg.style.display = "block";
 
-    mode === "work" ? onWorkStart() : onBreakStart();
+    if (!isPaused) {
+        mode === "work" ? onWorkStart() : onBreakStart();
+    }
+
+    isPaused = false;
+    startBtn.textContent = "Pause";
 
     timerInterval = setInterval(() => {
         timeLeft--;
@@ -39,6 +47,13 @@ function startTimer() {
 
         updateUI();
     }, 1000);
+}
+
+function pauseTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    isPaused = true;
+    startBtn.textContent = "Resume";
 }
 
 function switchMode() {
@@ -64,7 +79,6 @@ function updateUI() {
         .padStart(2, "0")}`;
 
     modeEl.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
-
     document.getElementById("work-count").textContent = workCount;
     document.getElementById("break-count").textContent = breakCount;
 }
@@ -85,6 +99,25 @@ async function onWorkStart() {
 
 async function onBreakStart() {
     catImg.src = await fetchCat(BREAK_CATEGORY_ID);
+    showMotivationalQuote();
+}
+
+async function onWorkStart() {
+    document.getElementById("left-gif").style.display = "none";
+    document.getElementById("right-gif").style.display = "none";
+
+    catImg.src = await fetchCat(WORK_CATEGORY_ID);
+    catImg.style.display = "block";
+
+    quoteEl.textContent = "";
+}
+
+async function onBreakStart() {
+    document.getElementById("left-gif").style.display = "block";
+    document.getElementById("right-gif").style.display = "block";
+    catImg.src = await fetchCat(BREAK_CATEGORY_ID);
+    catImg.style.display = "block";
+
     showMotivationalQuote();
 }
 
