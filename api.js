@@ -1,49 +1,39 @@
 const API_KEY = "live_P6LlOdplbdwwzhqhBifJ8stQXnVnvHEnXS1al28Lr6emVSGGxLLgENu7OtYI5XIR";
 
-fetch("https://api.thecatapi.com/v1/images/search", {
-    headers: {
-        "x-api-key": API_KEY
-    }
-})
-    .then(res => res.json())
-    .then(data => console.log(data));
-
 const WORK_CATEGORY_ID = 1;
 const BREAK_CATEGORY_ID = 5;
 
-// dom
 const timerEl = document.getElementById("timer");
 const modeEl = document.getElementById("mode");
 const catImg = document.getElementById("cat-img");
 const quoteEl = document.getElementById("quote");
 const startBtn = document.getElementById("startBtn");
 
-startBtn.addEventListener("click", startTimer);
+const doneSound = new Audio("img/harp.mp3");
+doneSound.volume = 0.6;
 
-// work
 let mode = "work";
 let timeLeft = 25 * 60;
 let timerInterval = null;
 
-// sessions
 let workCount = 0;
 let breakCount = 0;
 
-//timer
+startBtn.addEventListener("click", startTimer);
+
 function startTimer() {
-     if (timerInterval) return;
+    if (timerInterval) return;
+
     catImg.style.display = "block";
 
-    if (mode === "work") {
-        onWorkStart();
-    } else {
-        onBreakStart();
-    }
+    mode === "work" ? onWorkStart() : onBreakStart();
 
     timerInterval = setInterval(() => {
         timeLeft--;
 
         if (timeLeft === 0) {
+            doneSound.currentTime = 0;
+            doneSound.play();
             switchMode();
         }
 
@@ -51,8 +41,6 @@ function startTimer() {
     }, 1000);
 }
 
-
-//mode
 function switchMode() {
     if (mode === "work") {
         workCount++;
@@ -65,26 +53,26 @@ function switchMode() {
         timeLeft = 25 * 60;
         onWorkStart();
     }
-    updateUI();
 }
 
 function updateUI() {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    timerEl.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
 
     modeEl.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
 
-    // sessions
     document.getElementById("work-count").textContent = workCount;
     document.getElementById("break-count").textContent = breakCount;
 }
 
-
-//cat categories
 async function fetchCat(categoryId) {
     const res = await fetch(
-        `https://api.thecatapi.com/v1/images/search?category_ids=${categoryId}`
+        `https://api.thecatapi.com/v1/images/search?category_ids=${categoryId}`,
+        { headers: { "x-api-key": API_KEY } }
     );
     const data = await res.json();
     return data[0].url;
@@ -100,19 +88,12 @@ async function onBreakStart() {
     showMotivationalQuote();
 }
 
-// quotes
 const quotes = [
     "You did great. Now go loaf.",
     "Even cats take breaks.",
     "Stretch like a cat. You earned it."
 ];
+
 function showMotivationalQuote() {
-    const random =
-        quotes[Math.floor(Math.random() * quotes.length)];
-    quoteEl.textContent = random;
+    quoteEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
 }
-
-// start button
-startBtn.addEventListener("click", startTimer);
-
-
